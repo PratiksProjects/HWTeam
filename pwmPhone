@@ -1,0 +1,60 @@
+/*
+    3    5
+    6    9
+*/
+#include <EEPROM.h>
+void setup() {
+    Serial.begin(9600);
+    pinMode(3, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
+    pinMode(9, OUTPUT);
+}
+
+void loop() {
+
+        if (Serial.available() > 0) {
+                // read the incoming byte:
+                int addr = 0;
+                String str = Serial.readString();
+                Serial.flush();
+                int commaIndex = str.indexOf(',');
+                String strSpeed = str.substring(commaIndex+1);
+                int mySpeed = strSpeed.toInt();
+                int negSpeed = 255-mySpeed;
+                if(str[0] == 'u')
+                {
+                    EEPROM.write(0,mySpeed);
+                    analogWrite(3, mySpeed);
+                    analogWrite(5, mySpeed);
+                    analogWrite(6, mySpeed);
+                    analogWrite(9, mySpeed);
+                } 
+                else if (str[0] == 'd')
+                {
+                    EEPROM.write(1,mySpeed);
+                    analogWrite(3, mySpeed);
+                    analogWrite(5, mySpeed);
+                    analogWrite(6, mySpeed);
+                    analogWrite(9, mySpeed);
+                }
+                else if (str[0] == 'l')
+                {
+                    EEPROM.write(2,mySpeed);
+                    analogWrite(3, mySpeed);
+                    analogWrite(5, negSpeed);
+                    analogWrite(6, mySpeed);
+                    analogWrite(9, negSpeed);
+                }
+                else if (str[0] == 'r')
+                {
+                    EEPROM.write(3,mySpeed);
+                    analogWrite(3, negSpeed);
+                    analogWrite(5, mySpeed);
+                    analogWrite(6, negSpeed);
+                    analogWrite(9, mySpeed);
+                }
+                else {
+                }                
+        }
+}
